@@ -50,55 +50,55 @@ configWindow:hide()
 
 local listaMacros = {}
 
-local Com = macro(16100, "Combo", function()
+local Com = macro(400, "Blast", function()
     if g_game.isAttacking() then
-        say("combo impact")
+        say("sebas Blast")
     end
 end)
 
-local Agoni = macro(100, "Agonimos", function()
+local Agoni = macro(100, "Impact", function()
     if g_game.isAttacking() then
-        say("Agonimos")
+        say("sebas Impact")
     end
 end)
 
-local Div = macro(300, "Missile", function()
+local Div = macro(300, "Final", function()
     if g_game.isAttacking() then
-        say("divine missile")
+        say("sebas Final Impact")
     end
 end)
 		
-local Attack = macro(400, "Ondas", function()
+local Attack = macro(400, "Kame", function()
     if g_game.isAttacking() then
-        say("ondas da morte")
+        say("alternative kamehameha")
     end
 end)
 
-local Destruc = macro(600, "Relampago", function()
+local Destruc = macro(600, "Dam Pow", function()
     if g_game.isAttacking() then
-        say("mascara relampago")
+        say("damage power")
     end
 end)
 
-local Fire = macro(800, "Fire", function()
+local Fire = macro(800, "FireX", function()
     if g_game.isAttacking() then
         say("fire bomb")
     end
 end)
 
-local macroAng = macro(9000, "Buff", function()
-  say('rugir da morte')
+local macroAng = macro(1000, "Buff", function()
+  say('alternative explosion')
 end)
 
 
 local macroAngs = macro(1, "Regen+", function()
     if hppercent() <= 90 and manapercent() > 5 and not hasManaShield() then
-        say("MYSTIC DEFENSE")
+        say("alternative defense")
     elseif hasManaShield() and (hppercent() >= 10 or manapercent() < 95) then
         say("MYSTIC KAI")
     else
         if hppercent() <= 90 then
-            say("mascara regeneration")
+            say("super regeneration")
         end
     end
 end)
