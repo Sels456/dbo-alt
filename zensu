@@ -50,7 +50,7 @@ local listaMacros = {}
 
 local Exo = macro(1, 'Green', function()
   if hppercent() <= 90 or manapercent() <= 90 then
-   usewith(11826, player)
+   usewith(11862, player)
    end
 end)
 
