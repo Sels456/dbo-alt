@@ -55,9 +55,9 @@ local Exo = macro(1, 'Green', function()
 end)
 
 
-local Ten = macro(1, 'TENEBRA', function()
+local Ten = macro(1, 'Gold', function()
   if hppercent() <= 90 or manapercent() <= 90 then
-   usewith(13320, player)
+   usewith(12633, player)
    end
 end)
 
