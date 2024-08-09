@@ -56,7 +56,7 @@ local Com = macro(400, "Blast", function()
     end
 end)
 
-local Agoni = macro(100, "Impact", function()
+local Agoni = macro(3000, "Impact", function()
     if g_game.isAttacking() then
         say("sebas Impact")
     end
