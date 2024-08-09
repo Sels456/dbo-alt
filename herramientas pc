@@ -122,7 +122,7 @@ local Atk = macro(1, "Attack", "", function()
 end)
 
 local Pow = macro(100, "Treinar", function()
-if (manapercent() >= 20) then 
+if (manapercent() >= 99) then 
 say('ManaDown')
 end
 end)
