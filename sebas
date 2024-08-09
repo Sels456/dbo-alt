@@ -56,13 +56,13 @@ local Com = macro(400, "Blast", function()
     end
 end)
 
-local Agoni = macro(3000, "Impact", function()
+local Agoni = macro(300, "Impact", function()
     if g_game.isAttacking() then
         say("sebas Impact")
     end
 end)
 
-local Div = macro(300, "Final", function()
+local Div = macro(3100, "Final", function()
     if g_game.isAttacking() then
         say("sebas Final Impact")
     end
@@ -80,14 +80,14 @@ local Destruc = macro(600, "Dam Pow", function()
     end
 end)
 
-local Fire = macro(800, "FireX", function()
+local Fire = macro(800, "AltExpl", function()
     if g_game.isAttacking() then
-        say("fire bomb")
+        say("alternative explosion")
     end
 end)
 
 local macroAng = macro(1000, "Buff", function()
-  say('alternative explosion')
+  say('')
 end)
 
 
