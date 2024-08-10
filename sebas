@@ -95,7 +95,7 @@ local macroAngs = macro(1, "Regen+", function()
     if hppercent() <= 90 and manapercent() > 5 and not hasManaShield() then
         say("alternative defense")
     elseif hasManaShield() and (hppercent() >= 10 or manapercent() < 95) then
-        say("MYSTIC KAI")
+        say("")
     else
         if hppercent() <= 90 then
             say("super regeneration")
