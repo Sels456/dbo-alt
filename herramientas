@@ -1,5 +1,26 @@
--- size es ancho alto
-setDefaultTab("New")
+-- Establece la pestaÃ±a por defecto en "spells"
+setDefaultTab("NEW")
+
+-- Crea una etiqueta de UI con el texto 
+local name = UI.Label("Super Macro")
+
+-- Define una macro que se ejecuta cada 800 milisegundos
+macro(800, function()
+  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+
+  -- Itera sobre una lista de colores
+  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
+    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
+    schedule(rainbowDelay, function()
+      name:setColor(color) -- Establece el color de la etiqueta
+    end)
+
+    -- Incrementa el retraso para el prÃ³ximo color
+    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
+  end
+end, SpellsTab)
+
+setDefaultTab("NEW")
 
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
