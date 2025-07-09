@@ -261,16 +261,16 @@ end)
 ui:breakAnchors() -- Rompe las restricciones de posición actuales del panel
 ui:move(260 ,30) -- Mueve el panel a la posición
 
-local moneyIds = {3031, 3035} -- gold coin, platinium coin
-macro(1000, "Exchange money", function()
+local mIds = {3031, 3035} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
+macro(1000, "Exchange Money", function()
   local containers = g_game.getContainers()
   for index, container in pairs(containers) do
-    if not container.lootContainer then -- ignore monster containers
+    if not container.lootContainer then
       for i, item in ipairs(container:getItems()) do
         if item:getCount() == 100 then
-          for m, moneyId in ipairs(moneyIds) do
-            if item:getId() == moneyId then
-              return g_game.use(item)            
+          for m, mId in ipairs(mIds) do
+            if item:getId() == mId then
+              return g_game.use(item)          
             end
           end
         end
