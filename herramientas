@@ -299,3 +299,22 @@ macro(1000, "Exchange Money", function()
     end
   end
 end)
+
+local castBelowHp = 40
+local deactiveBelowMana = 40
+macro(100, "advanced manashield",  function()
+  if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
+    say('Alternative defense')
+  end
+  if (manapercent() <= deactiveBelowMana and  hppercent() >= castBelowHp and hasManaShield()) then
+      say('Alternative defense cancel')
+  end
+end)
+
+local healingSpell = 'regeneration'
+local hpPercent = 99
+macro(50, "Hp Regen",  function()
+  if (hppercent() <= hpPercent) then
+    say(healingSpell) 
+  end
+end)
