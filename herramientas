@@ -260,3 +260,21 @@ end)
 -- Mueve el panel de UI a la posición deseada
 ui:breakAnchors() -- Rompe las restricciones de posición actuales del panel
 ui:move(260 ,30) -- Mueve el panel a la posición
+
+local mIds = {0000, 1111} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
+macro(1000, "Exchange Money 2", function()
+  local containers = g_game.getContainers()
+  for index, container in pairs(containers) do
+    if not container.lootContainer then
+      for i, item in ipairs(container:getItems()) do
+        if item:getCount() == 100 then
+          for m, mId in ipairs(mIds) do
+            if item:getId() == mId then
+              return g_game.use(item)         
+            end
+          end
+        end
+      end
+    end
+  end
+end)
