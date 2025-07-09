@@ -210,7 +210,7 @@ configWindow.closeButton.onClick = function(widget)
     configWindow:hide()
 end
 
-UI.SwitchAndButton({on = config.enabled, left = "HERRAMIENTAS", right = "MENU"}, function(widget)
+UI.SwitchAndButton({on = config.enabled, left = "OPCIONES", right = "MENU"}, function(widget)
     config.enabled = not config.enabled
     for i, mac in ipairs(listaMacros) do
         mac.setOn(config.enabled and checkboxes[i]:isChecked())
