@@ -311,10 +311,10 @@ macro(100, "advanced manashield",  function()
   end
 end)
 
-local healingSpell = 'regeneration'
+local healingSpell = 'Regeneration'
 local hpPercent = 99
 macro(50, "Hp Regen",  function()
   if (hppercent() <= hpPercent) then
-    say(healingSpell) 
+    say(regeneration) 
   end
 end)
