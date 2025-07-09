@@ -1,5 +1,5 @@
 -- size es ancho alto
-setDefaultTab("Main")
+setDefaultTab("New")
 
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
