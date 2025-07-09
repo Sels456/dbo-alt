@@ -261,6 +261,7 @@ end)
 ui:breakAnchors() -- Rompe las restricciones de posición actuales del panel
 ui:move(260 ,30) -- Mueve el panel a la posición
 
+local moneyIds = {3031, 3035} -- gold coin, platinium coin
 macro(1000, "Exchange money", function()
   local containers = g_game.getContainers()
   for index, container in pairs(containers) do
