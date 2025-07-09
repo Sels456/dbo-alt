@@ -52,19 +52,19 @@ local listaMacros = {}
 
 local Com = macro(400, "Blast", function()
     if g_game.isAttacking() then
-        say("Adroid 16 Blast")
+        say("Android 16 Blast")
     end
 end)
 
 local Agoni = macro(300, "Impact", function()
     if g_game.isAttacking() then
-        say("Adroid 16 Impact")
+        say("Android 16 Impact")
     end
 end)
 
 local Div = macro(3100, "Final", function()
     if g_game.isAttacking() then
-        say("Adroid 16 Final Impact")
+        say("Android 16 Final Impact")
     end
 end)
 		
