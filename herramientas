@@ -116,7 +116,7 @@ end)
 
 local Pow = macro(100, "Treinar", function()
 if (manapercent() >= 20) then 
-say('PowerDown')
+say('manadown')
 end
 end)
 
