@@ -89,6 +89,7 @@ end)
 local macroAng = macro(1000, "Expl", function()
   if g_game.isAttacking() then
         say("explosion")
+    end
 end)
 
 
