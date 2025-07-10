@@ -386,3 +386,21 @@ nextBackpack = macro(100,"Abrir Mochila",function()
         end
     end
 end)
+-- Función para crear el ícono con funcionalidad de switchable
+function createCityIcon(cityName, xPosition, yPosition)
+  local icon = addIcon(cityName .. "San", {item=3034, text=cityName, movable=true, switchable=false}, function()
+    NPC.say("hi")
+    schedule(600, function() NPC.say(cityName) end)
+  end)
+
+  icon:breakAnchors()  -- Rompe las restricciones de posición
+  icon:move(xPosition, yPosition)  -- Mueve el ícono a la posición dada
+end
+
+-- Llamadas para crear los íconos para cada ciudad
+
+createCityIcon("vender common",  50, 60)
+createCityIcon("vender uncommon", 50, 120)
+createCityIcon("vender rare", 50, 180)
+createCityIcon("vender epic", 50, 240)
+createCityIcon("vender lendario", 50, 300)
