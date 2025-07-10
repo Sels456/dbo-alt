@@ -1,19 +1,37 @@
+
 -- size es ancho alto
 setDefaultTab("NEW")
 
+-- Crea una etiqueta de UI con el texto 
+local name = UI.Label("Tecnicas")
 
+-- Define una macro que se ejecuta cada 800 milisegundos
+macro(800, function()
+  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+
+  -- Itera sobre una lista de colores
+  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
+    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
+    schedule(rainbowDelay, function()
+      name:setColor(color) -- Establece el color de la etiqueta
+    end)
+
+    -- Incrementa el retraso para el prÃ³ximo color
+    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
+  end
+end, SpellsTab)
 
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
-  text: C16
-  size: 100 250
+  text: Todos
+  size: 160 160
 
   HorizontalSeparator
     id: separator
     anchors.right: parent.right
     anchors.left: parent.left
     anchors.bottom: closeButton.top
-    margin-bottom: 6
+    margin-bottom: 5
 
   Panel
     id: lista
@@ -50,83 +68,41 @@ configWindow:hide()
 
 local listaMacros = {}
 
-local Com = macro(400, "Blast", function()
+local lvl1 = macro(500, "Lvl1 Missiles", function()
     if g_game.isAttacking() then
-        say("Android 16 Blast")
+        say("missiles")
     end
 end)
 
-local Agoni = macro(300, "Impact", function()
+local lvl25 = macro(500, "Lvl25 SupMiss", function()
     if g_game.isAttacking() then
-        say("Android 16 Impact")
+        say("super missiles")
     end
 end)
 
-local Div = macro(3100, "Final", function()
+local lvl100 = macro(1000, "Lvl100 Expl", function()
     if g_game.isAttacking() then
-        say("Android 16 Final Impact")
-    end
-end)
-		
-local Attack = macro(400, "Kame", function()
-    if g_game.isAttacking() then
-        say("alternative kamehameha")
+        say("explosion")
     end
 end)
 
-local Destruc = macro(600, "Dam Pow", function()
-    if g_game.isAttacking() then
-        say("damage power")
-    end
-end)
-
-local Fire = macro(800, "AltExpl", function()
+		local lvl15k = macro(1000, "Lvl1k5 AltExpl", function()
     if g_game.isAttacking() then
         say("alternative explosion")
     end
 end)
 
-local macroAng = macro(1000, "Expl", function()
-  if g_game.isAttacking() then
-        say("explosion")
+local lvl3k = macro(3000, "Lvl3k AltKame", function()
+    if g_game.isAttacking() then
+        say("alternative kamehameha")
     end
 end)
 
-
-local macroAngs = macro(1, "Regen+", function()
-    if hppercent() <= 90 and manapercent() > 5 and not hasManaShield() then
-        say("alternative defense")
-    elseif hasManaShield() and (hppercent() >= 10 or manapercent() < 95) then
-        say("alternative defense cancel")
-    else
-        if hppercent() <= 90 then
-            say("regeneration")
-        end
-    end
-end)
-
-local macroInm = macro(800, "Missiles", function()
-  if g_game.isAttacking() then
-   say('missiles')
-  end
-end)
-
-local macroSup = macro(500, "SupMiss", function()
-  if g_game.isAttacking() then
-   say('super missiles')
-  end
-end)
-
-table.insert(listaMacros, Com)
-table.insert(listaMacros, Agoni)
-table.insert(listaMacros, Div)
-table.insert(listaMacros, Attack)
-table.insert(listaMacros, Destruc)
-table.insert(listaMacros, Fire)
-table.insert(listaMacros, macroAng)
-table.insert(listaMacros, macroAngs)
-table.insert(listaMacros, macroInm)
-table.insert(listaMacros, macroSup)
+table.insert(listaMacros, lvl1)
+table.insert(listaMacros, lvl25)
+table.insert(listaMacros, lvl100)
+table.insert(listaMacros, lvl15k)
+table.insert(listaMacros, lvl3k)
 
 local checkboxes = {}
 
@@ -145,7 +121,7 @@ configWindow.closeButton.onClick = function(widget)
     configWindow:hide()
 end
 
-UI.SwitchAndButton({on = config.enabled, left = "C16", right = "MENU"}, function(widget)
+UI.SwitchAndButton({on = config.enabled, left = "Para Todos", right = "MENU"}, function(widget)
     config.enabled = not config.enabled
     for i, mac in ipairs(listaMacros) do
         mac.setOn(config.enabled and checkboxes[i]:isChecked())
@@ -165,7 +141,7 @@ setDefaultTab("NEW")
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
   text: Barba
-  size: 100 250
+  size: 160 160
 
   HorizontalSeparator
     id: separator
@@ -209,83 +185,33 @@ configWindow:hide()
 
 local listaMacros = {}
 
-local Com = macro(400, "Blast", function()
+local lvl4 = macro(400, "Lvl400 Blast", function()
     if g_game.isAttacking() then
-        say("barba branca Blast")
+        say("barba branca blast")
     end
 end)
 
-local Agoni = macro(300, "Impact", function()
+local lvl8 = macro(800, "Lvl800 Impact", function()
     if g_game.isAttacking() then
         say("barba branca Impact")
     end
 end)
 
-local Div = macro(3100, "Final", function()
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
     if g_game.isAttacking() then
         say("barba branca Final Impact")
     end
 end)
-		
-local Attack = macro(400, "Kame", function()
+
+local lvl5k = macro(3100, "Lvl5k Tremor", function()
     if g_game.isAttacking() then
-        say("alternative kamehameha")
+        say("tremor")
     end
 end)
-
-local Destruc = macro(600, "Dam Pow", function()
-    if g_game.isAttacking() then
-        say("damage power")
-    end
-end)
-
-local Fire = macro(800, "AltExpl", function()
-    if g_game.isAttacking() then
-        say("alternative explosion")
-    end
-end)
-
-local macroAng = macro(1000, "Expl", function()
-  if g_game.isAttacking() then
-        say("explosion")
-    end
-end)
-
-
-local macroAngs = macro(1, "Regen+", function()
-    if hppercent() <= 90 and manapercent() > 5 and not hasManaShield() then
-        say("alternative defense")
-    elseif hasManaShield() and (hppercent() >= 10 or manapercent() < 95) then
-        say("alternative defense cancel")
-    else
-        if hppercent() <= 90 then
-            say("regeneration")
-        end
-    end
-end)
-
-local macroInm = macro(800, "Missiles", function()
-  if g_game.isAttacking() then
-   say('missiles')
-  end
-end)
-
-local macroSup = macro(500, "SupMiss", function()
-  if g_game.isAttacking() then
-   say('super missiles')
-  end
-end)
-
-table.insert(listaMacros, Com)
-table.insert(listaMacros, Agoni)
-table.insert(listaMacros, Div)
-table.insert(listaMacros, Attack)
-table.insert(listaMacros, Destruc)
-table.insert(listaMacros, Fire)
-table.insert(listaMacros, macroAng)
-table.insert(listaMacros, macroAngs)
-table.insert(listaMacros, macroInm)
-table.insert(listaMacros, macroSup)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
 
 local checkboxes = {}
 
@@ -314,3 +240,210 @@ end, function()
     configWindow:raise()
     configWindow:focus()
 end)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Androide
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("android 16 blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("android 16 Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("android 16 Final Impact")
+    end
+end)
+
+local lvl5k = macro(3100, "Lvl5k Reta", function()
+    if g_game.isAttacking() then
+        say("Retaliate protocol")
+    end
+end)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "C 16", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Kuzan
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji Final Impact")
+    end
+end)
+
+local lvl5k = macro(3100, "Lvl5k Ice", function()
+    if g_game.isAttacking() then
+        say("ice collapse")
+    end
+end)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "Kuzan", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
