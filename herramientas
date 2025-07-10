@@ -300,7 +300,7 @@ macro(1000, "Exchange Money", function()
   end
 end)
 
-local castBelowHp = 40
+local castBelowHp = 90
 local deactiveBelowMana = 40
 macro(100, "advanced manashield",  function()
   if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
