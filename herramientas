@@ -20,8 +20,6 @@ macro(800, function()
   end
 end, SpellsTab)
 
-setDefaultTab("NEW")
-
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
   text: OPCIONES
