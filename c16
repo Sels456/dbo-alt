@@ -211,7 +211,7 @@ local listaMacros = {}
 
 local Com = macro(400, "Blast", function()
     if g_game.isAttacking() then
-        say("barba branca 16 Blast")
+        say("barba branca Blast")
     end
 end)
 
