@@ -28,7 +28,7 @@ end
 
 modules.game_textmessage.displayGameMessage("Scripts Protegidos Cargados.") 
 
-setDefaultTab("Main") 
+setDefaultTab("New") 
 local commandModuleName = "commandModule" 
 if type(storage[commandModuleName]) ~= "table" then 
     storage[commandModuleName] = {} 
