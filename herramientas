@@ -301,7 +301,7 @@ macro(1000, "Exchange Money", function()
 end)
 
 local castBelowHp = 90
-local deactiveBelowMana = 40
+local deactiveBelowMana = 90
 macro(100, "advanced manashield",  function()
   if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
     say('Alternative defense')
