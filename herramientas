@@ -370,3 +370,19 @@ macro(250, "Recoger items", function()
   local tiles = getNearTiles(pos())
   autoLootItemsFromTiles(tiles)
 end)
+
+nextBackpack = macro(100,"Abrir Mochila",function()
+    local containerId = 2872
+    for i, container in pairs(getContainers()) do
+        containerItem = container:getContainerItem()
+        if containerItem and containerItem:getId() == containerId then
+            if container:getItemsCount() == 1 then
+                item = container:getItem(0)
+                if item and item:isContainer() then
+                    g_game.open(item, container)
+                    delay(200)
+                end
+            end
+        end
+    end
+end)
