@@ -21,24 +21,73 @@ end)
 -- Establece la pestaÃ±a por defecto en "spells"
 setDefaultTab("NEW")
 
--- Crea una etiqueta de UI con el texto 
-local name = UI.Label("Super Macro")
 
--- Define una macro que se ejecuta cada 800 milisegundos
-macro(800, function()
-  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+local label = UI.Label("Super Macro")
+label:setColor("#cc1d10") -- Color base
+label:setFont("verdana-11px-rounded")
 
-  -- Itera sobre una lista de colores
-  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
-    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
-    schedule(rainbowDelay, function()
-      name:setColor(color) -- Establece el color de la etiqueta
+local glowPosition = 1
+local glowDirection = 1
+
+macro(50, function()
+    local text = "Super Macro"
+    local numChars = #text
+    local glowRange = math.max(1, math.floor(numChars / 10)) 
+    local coloredText = {}
+
+    for i = 1, numChars do
+        local char = text:sub(i, i)
+        local color = "#ba0000" -- Color base
+        if math.abs(i - glowPosition) <= glowRange then
+            color = "#e9baba" -- Color de brillo
+        end
+        table.insert(coloredText, char)
+        table.insert(coloredText, color)
+    end
+
+    glowPosition = glowPosition + glowDirection
+    if glowPosition > numChars then
+        glowPosition = numChars - 1
+        glowDirection = -1
+    elseif glowPosition < 1 then
+        glowPosition = 2
+        glowDirection = 1
+    end
+
+    label:setColoredText(coloredText)
+end)
+UI.Separator()
+
+
+
+blessCheckBox = setupUI([[
+CheckBox
+  id: blessCheck
+  font: cipsoftFont
+  text: Auto Bless
+  !tooltip: tr('Verificar Bless ao Relogar')
+]])
+
+
+if storage.blessCheck == nil then
+    storage.blessCheck = true
+end
+blessCheckBox:setChecked(storage.blessCheck)
+
+
+blessCheckBox.onCheckChange = function(widget, checked)
+    storage.blessCheck = checked
+end
+
+if storage.blessCheck and player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("Bless Verificada!")
+        end
     end)
+end
 
-    -- Incrementa el retraso para el prÃ³ximo color
-    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
-  end
-end, SpellsTab)
 
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
@@ -86,14 +135,6 @@ configWindow = UI.createWindow('ConfigWindow', rootWidget)
 configWindow:hide()
 
 local listaMacros = {}
-
-local bless = false
-local Bless = macro(1000, "!Bless", function()
-    if bless ~= true then
-        bless = true
-      say("!bless")
-    end
-end)
 
 local Bol = macro(1000, "!Bol", function()
   if not getFinger() then
@@ -221,7 +262,6 @@ local Spe = macro(60100, "speed", function()
   say('super speed')
 end)
 
-table.insert(listaMacros, Bless)
 table.insert(listaMacros, Bol)
 table.insert(listaMacros, Ene)
 table.insert(listaMacros, Hol)
@@ -404,3 +444,23 @@ createCityIcon("vender uncommon", 50, 120)
 createCityIcon("vender rare", 50, 180)
 createCityIcon("vender epic", 50, 240)
 createCityIcon("vender lendario", 50, 300)
+
+
+-- Crea una etiqueta de UI con el texto 
+local name = UI.Label("XxLuCaSxX")
+
+-- Define una macro que se ejecuta cada 800 milisegundos
+macro(800, function()
+  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+
+  -- Itera sobre una lista de colores
+  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
+    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
+    schedule(rainbowDelay, function()
+      name:setColor(color) -- Establece el color de la etiqueta
+    end)
+
+    -- Incrementa el retraso para el prÃ³ximo color
+    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
+  end
+end, SpellsTab)
