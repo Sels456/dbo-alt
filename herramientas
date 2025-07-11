@@ -584,7 +584,7 @@ createCityIcon("vender uncommon", 50, 120)
 createCityIcon("vender rare", 50, 180)
 createCityIcon("vender epic", 50, 240)
 createCityIcon("vender lendario", 50, 300)
-createCityIcon("trade",  80, 60)
+createCityIcon("trade",  110, 60)
 
 -- Crea una etiqueta de UI con el texto 
 local name = UI.Label("XxLuCaSxX")
