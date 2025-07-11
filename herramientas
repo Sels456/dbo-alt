@@ -18,7 +18,7 @@ end)
 end)
 
 
--- Establece la pestaÃ±a por defecto en "spells"
+-- Establece la pestaÃ±a por defecto en "NEW"
 setDefaultTab("NEW")
 
 
@@ -58,10 +58,38 @@ macro(50, function()
 end)
 UI.Separator()
 
+--detector bless
+blessCheckBox = setupUI([[
+CheckBox
+  id: blessCheck
+  font: cipsoftFont
+  text: Auto Bless
+  !tooltip: tr('Verificar Bless ao Relogar')
+]])
 
 
-setDefaultTab("Main")
+if storage.blessCheck == nil then
+    storage.blessCheck = true
+end
+blessCheckBox:setChecked(storage.blessCheck)
 
+
+blessCheckBox.onCheckChange = function(widget, checked)
+    storage.blessCheck = checked
+end
+
+
+if storage.blessCheck and player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("Bless Verificada!")
+        end
+    end)
+end
+
+
+--macro completa
 g_ui.loadUIFromString([[
 menPanel < Panel
   margin: 2
@@ -72,8 +100,8 @@ menPanel < Panel
 ConfigWindowKnight < MainWindow
   !text: tr('- OPCIONES -')
   font: terminus-10px
-  color: blue
-  size: 200 250
+  color: yellow
+  size: 210 200
   @onEscape: self:hide()
 
   TabBar
@@ -156,7 +184,7 @@ if rootWidget then
   end
 end)
   
-  local Hol = macro(100, "Hold", nil, function()
+  local Hol = macro(100, "Hold Target", nil, function()
   if g_game.isAttacking() 
 then
  oldTarget = g_game.getAttackingCreature()
@@ -172,7 +200,7 @@ if (oldTarget:getPosition().z == posz()) then
   end
 end)
 
-local Atk = macro(1, "Attack", "", function() 
+local Atk = macro(1, "Attack All", "", function() 
   local battlelist = getSpectators();
   local closest = 10
   local lowesthpc = 101
@@ -201,7 +229,7 @@ end)
 
 local Pow = macro(100, "Treinar", function()
 if (manapercent() >= 20) then 
-say('PowerDown')
+say('manadown')
 end
 end)
 
@@ -244,9 +272,100 @@ function bugMapMobile.logic()
 end
 
 local Bug = macro(1, "Bug Map", bugMapMobile.logic);
+    
+local Spe = macro(60100, "Speed", function()
+  say('super speed')
+end)
+    
+  -- Agregando los macros a la lista
+  table.insert(listaMacrosNormal, Bol)
+  table.insert(listaMacrosNormal, Hol)
+  table.insert(listaMacrosNormal, Atk)
+  table.insert(listaMacrosNormal, Pow)
+  table.insert(listaMacrosNormal, Bug)
+  table.insert(listaMacrosNormal, Spe)
 
+-- Macros para hechizos del Knight (No-PK)
+local Ene = macro(1, "Enemy", function()
+for _,pla in ipairs(getSpectators(posz())) do
+attacked = g_game.getAttackingCreature()
+  if (not attacked or (attacked and (not attacked:isPlayer() or (pla:getHealthPercent() < attacked:getHealthPercent())))) and pla:isPlayer() and pla:getEmblem() ~= 1 then 
+   g_game.attack(pla)
+  end
+end
+end) 
+
+local Def = macro(4000, "Alter Def", function()
+    if g_game.isAttacking() then
+        say("Alternative defense")
+    end
+end)
+
+local Canc = macro(5000, "Alter Cancel", function()
+    if g_game.isAttacking() then
+        say("Alternative defense cancel")
+    end
+end)
+    
+    local castBelowHp = 90
+local deactiveBelowMana = 80
+local shie = macro(100, "ManaShield",  function()
+  if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
+    say('Alternative defense')
+  end
+  if (manapercent() <= deactiveBelowMana and  hppercent() >= castBelowHp and hasManaShield()) then
+      say('Alternative defense cancel')
+  end
+end)
+    
+local Sen = macro(1000, "Sense", function()
+  say('sense')
+end)
+
+  -- Agregando los macros No-PK a la lista
+  table.insert(listaMacrosNoPK, Ene)
+  table.insert(listaMacrosNoPK, Def)
+  table.insert(listaMacrosNoPK, Canc)
+  table.insert(listaMacrosNoPK, shie)
+  table.insert(listaMacrosNoPK, Sen)
+    
+  local Pur = macro(1, 'Sensu Purple', function()
+  if hppercent() <= 90 or manapercent() <= 90 then
+   usewith(12644, player)
+   end
+end)
+  
+  local healingSpell = 'Regeneration'
+local hpPercent = 90
+local Regen = macro(50, "Hp Regen",  function()
+  if (hppercent() <= hpPercent) then
+    say('regeneration') 
+  end
+end)
+  
+  table.insert(listaMacrosWheel, Pur)
+  table.insert(listaMacrosWheel, Regen)
+    
+    local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
+local Gold = macro(1000, "Exchange Money", function()
+  local containers = g_game.getContainers()
+  for index, container in pairs(containers) do
+    if not container.lootContainer then
+      for i, item in ipairs(container:getItems()) do
+        if item:getCount() == 100 then
+          for m, mId in ipairs(mIds) do
+            if item:getId() == mId then
+              return g_game.use(item)          
+            end
+          end
+        end
+      end
+    end
+  end
+end)
+    
 -- Esconder mensaje naranja 
-local TH = macro(100, "Msg", function() end)
+local TH = macro(100, "No Msg Nrj", function() end)
 onStaticText(function(thing, text)
     if TH.isOff() then return end
     if not text:find('says:') then
@@ -255,19 +374,15 @@ onStaticText(function(thing, text)
 end)
 
 --[[Esconder MAGIAS(SPRITES)]]--
-local sprh = macro(100, "Sprite", function() end)
+local sprh = macro(100, "Sin Sprites", function() end)
 onAddThing(function(tile, thing)
     if sprh.isOff() then return end
     if thing:isEffect() then
         thing:hide()
     end
 end)
-
-local Spe = macro(60100, "speed", function()
-  say('super speed')
-end)
-  
-  --Recoger items del suelo
+    
+    --Recoger items del suelo
  function getNearTiles(pos)
   if type(pos) ~= "table" then
     pos = pos:getPosition() 
@@ -301,63 +416,21 @@ local Items = macro(250, "Recoger del suelo", function()
   local tiles = getNearTiles(pos())
   autoLootItemsFromTiles(tiles)
 end)
-
-
-  -- Agregando los macros a la lista
-  table.insert(listaMacrosNormal, Bol)
-  table.insert(listaMacrosNormal, Hol)
-  table.insert(listaMacrosNormal, Atk)
-  table.insert(listaMacrosNormal, Pow)
-  table.insert(listaMacrosNormal, Bug)
-  table.insert(listaMacrosNormal, Th)
-  table.insert(listaMacrosNormal, sprh)
-  table.insert(listaMacrosNormal, Spe)
-  table.insert(listaMacrosNormal, Items)
-
--- Macros para hechizos del Knight (No-PK)
-local Ene = macro(1, "Enemy", function()
-for _,pla in ipairs(getSpectators(posz())) do
-attacked = g_game.getAttackingCreature()
-  if (not attacked or (attacked and (not attacked:isPlayer() or (pla:getHealthPercent() < attacked:getHealthPercent())))) and pla:isPlayer() and pla:getEmblem() ~= 1 then 
-   g_game.attack(pla)
-  end
-end
-end) 
-
-local Def = macro(4000, "AlterDef", function()
-    if g_game.isAttacking() then
-        say("Alternative defense")
-    end
-end)
-
-local Canc = macro(5000, "AlterCancel", function()
-    if g_game.isAttacking() then
-        say("Alternative defense cancel")
-    end
-end)
-
-  -- Agregando los macros No-PK a la lista
-  table.insert(listaMacrosNoPK, Ene)
-  table.insert(listaMacrosNoPK, Def)
-  table.insert(listaMacrosNoPK, Canc)
-
-  local Pur = macro(1, 'Purple', function()
-  if hppercent() <= 90 or manapercent() <= 90 then
-   usewith(12644, player)
-   end
-end)
-  
-  local healingSpell = 'Regeneration'
-local hpPercent = 90
-local Regen = macro(50, "Hp Regen",  function()
-  if (hppercent() <= hpPercent) then
-    say('regeneration') 
-  end
-end)
-  
-  table.insert(listaMacrosWheel, Pur)
-  table.insert(listaMacrosWheel, Regen)
     
+local Cha = macro(60100, "Chakra", function()
+  say('chakra feet')
+end)
+    
+    local Luz = macro(10000, "Luz", function()
+  say('luz')
+end)
+
+    table.insert(listaMacrosMas, Gold)
+    table.insert(listaMacrosMas, TH)
+    table.insert(listaMacrosMas, sprh)
+    table.insert(listaMacrosMas, Items)
+    table.insert(listaMacrosMas, Cha)
+    table.insert(listaMacrosMas, Luz)
   -- Creación de checkboxes para los paneles
   local checkboxesNormal = {}
   local checkboxesNoPK = {}
@@ -477,36 +550,6 @@ end)
 -- Mueve el panel de UI a la posición deseada
 ui:breakAnchors() -- Rompe las restricciones de posición actuales del panel
 ui:move(260 ,30) -- Mueve el panel a la posición
-
-local mIds = {3031, 3035} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
-macro(1000, "Exchange Money", function()
-  local containers = g_game.getContainers()
-  for index, container in pairs(containers) do
-    if not container.lootContainer then
-      for i, item in ipairs(container:getItems()) do
-        if item:getCount() == 100 then
-          for m, mId in ipairs(mIds) do
-            if item:getId() == mId then
-              return g_game.use(item)          
-            end
-          end
-        end
-      end
-    end
-  end
-end)
-
-local castBelowHp = 90
-local deactiveBelowMana = 90
-macro(100, "ManaShield",  function()
-  if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
-    say('Alternative defense')
-  end
-  if (manapercent() <= deactiveBelowMana and  hppercent() >= castBelowHp and hasManaShield()) then
-      say('Alternative defense cancel')
-  end
-end)
-
 
 nextBackpack = macro(100,"Abrir Mochila",function()
     local containerId = 2872
