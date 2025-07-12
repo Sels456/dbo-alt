@@ -335,6 +335,12 @@ end)
    end
 end)
   
+local Car = macro(5100, 'Carnes', function()
+  if hppercent() <= 90 or manapercent() <= 90 then
+   usewith(3577, player)
+   end
+end)
+
   local healingSpell = 'Regeneration'
 local hpPercent = 90
 local Regen = macro(50, "Hp Regen",  function()
@@ -344,6 +350,7 @@ local Regen = macro(50, "Hp Regen",  function()
 end)
   
   table.insert(listaMacrosWheel, Pur)
+  table.insert(listaMacrosWheel, Car)
   table.insert(listaMacrosWheel, Regen)
     
     local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
