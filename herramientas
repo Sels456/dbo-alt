@@ -348,10 +348,15 @@ local Regen = macro(50, "Hp Regen",  function()
     say('regeneration') 
   end
 end)
+
+local Exp = macro(3601000, "Exp Potion", function()
+  usewith(5880, player)
+end)
   
   table.insert(listaMacrosWheel, Pur)
   table.insert(listaMacrosWheel, Car)
   table.insert(listaMacrosWheel, Regen)
+  table.insert(listaMacrosWheel, Exp)
     
     local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
 local Gold = macro(1000, "Exchange Money", function()
