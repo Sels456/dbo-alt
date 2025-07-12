@@ -350,8 +350,10 @@ local Regen = macro(50, "Hp Regen",  function()
 end)
 
 local Exp = macro(3601000, "Exp Potion", function()
+  if g_game.isAttacking() then
   usewith(5880, player)
-end)
+  End
+end) 
   
   table.insert(listaMacrosWheel, Pur)
   table.insert(listaMacrosWheel, Car)
