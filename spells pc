@@ -135,11 +135,6 @@ end, function()
 end)
 
 
--- size es ancho alto
-setDefaultTab("NEW")
-
-
-
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
   text: Barba
