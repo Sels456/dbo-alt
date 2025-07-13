@@ -355,10 +355,34 @@ end)
   end
 end)
 
+local equipC = {
+    distanceChange = 1, -- distancia entre o target para mudar 
+    -- id do slot, variavel do slot, id1(atual), id2(mudar)
+    {varFunc = getNeck, slot = SlotNeck, id1 = 12506},
+    {varFunc = getFinger, slot = SlotFinger, id1 = 12507}
+};
+
+local Cam = macro(100, "Auto RingAmulet", function()
+    local target = g_game.getAttackingCreature();
+    local playerPos = pos();
+    if not g_game.isAttacking() then return; end
+    local targetPos = target:getPosition();
+    local targetDistance = getDistanceBetween(playerPos, targetPos);
+    for _, equip in ipairs(equipC) do
+        local currentItem = equip.varFunc();
+        if targetDistance <= equipC.distanceChange then
+            if not currentItem or currentItem:getId() ~= equip.id1 then
+                moveToSlot(equip.id1, equip.slot)
+            end
+        end
+    end
+end);
+
   table.insert(listaMacrosWheel, Pur)
   table.insert(listaMacrosWheel, Car)
   table.insert(listaMacrosWheel, Regen)
   table.insert(listaMacrosWheel, Exp)
+  table.insert(listaMacrosWheel, Cam)
     
     local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
 local Gold = macro(1000, "Exchange Money", function()
