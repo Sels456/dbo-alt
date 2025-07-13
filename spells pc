@@ -645,7 +645,7 @@ end)
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
   text: Hisoka
-  size: 160 160
+  size: 160 160 
 
   HorizontalSeparator
     id: separator
@@ -709,10 +709,9 @@ end)
 
 local lvl5k = macro(3100, "Lvl5k Ice", function()
     if g_game.isAttacking() then
-        say("Phantom pull")
+        say("phatom pull")
     end
 end)
-
 table.insert(listaMacros, lvl4)
 table.insert(listaMacros, lvl8)
 table.insert(listaMacros, lvl1k)
@@ -735,7 +734,7 @@ configWindow.closeButton.onClick = function(widget)
     configWindow:hide()
 end
 
-UI.SwitchAndButton({on = config.enabled, left = "Kuzan", right = "MENU"}, function(widget)
+UI.SwitchAndButton({on = config.enabled, left = "Hisoka", right = "MENU"}, function(widget)
     config.enabled = not config.enabled
     for i, mac in ipairs(listaMacros) do
         mac.setOn(config.enabled and checkboxes[i]:isChecked())
@@ -746,7 +745,7 @@ end, function()
     configWindow:focus()
 end)
 
---killua zoldyck 
+--killua zoldyck
 
 g_ui.loadUIFromString([[
 ConfigWindow < MainWindow
@@ -815,11 +814,9 @@ end)
 
 local lvl5k = macro(3100, "Lvl5k Ice", function()
     if g_game.isAttacking() then
-        say("deslize eletrico
-")
+        say("deslize eletrico")
     end
 end)
-
 table.insert(listaMacros, lvl4)
 table.insert(listaMacros, lvl8)
 table.insert(listaMacros, lvl1k)
@@ -842,8 +839,7 @@ configWindow.closeButton.onClick = function(widget)
     configWindow:hide()
 end
 
-UI.SwitchAndButton({on = config.enabled, left = "Killua
-", right = "MENU"}, function(widget)
+UI.SwitchAndButton({on = config.enabled, left = "Kuzan", right = "MENU"}, function(widget)
     config.enabled = not config.enabled
     for i, mac in ipairs(listaMacros) do
         mac.setOn(config.enabled and checkboxes[i]:isChecked())
