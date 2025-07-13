@@ -1,3 +1,5 @@
+
+
 local qw = modules.game_bot.contentsPanel.config
 macro(500, function()
 qw:setText("Super Bot")
@@ -21,6 +23,7 @@ end)
 -- Establece la pestaÃ±a por defecto en "NEW"
 setDefaultTab("TOOLS")
 
+UI.Separator()
 
 local label = UI.Label("Super Macro")
 label:setColor("#cc1d10") -- Color base
