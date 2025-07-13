@@ -1,0 +1,545 @@
+
+-- size es ancho alto
+setDefaultTab("TOOLS")
+
+-- Crea una etiqueta de UI con el texto 
+local name = UI.Label("Tecnicas")
+
+-- Define una macro que se ejecuta cada 800 milisegundos
+macro(800, function()
+  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+
+  -- Itera sobre una lista de colores
+  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
+    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
+    schedule(rainbowDelay, function()
+      name:setColor(color) -- Establece el color de la etiqueta
+    end)
+
+    -- Incrementa el retraso para el prÃ³ximo color
+    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
+  end
+end, SpellsTab)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Todos
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 5
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl1 = macro(500, "Lvl1 Missiles", function()
+    if g_game.isAttacking() then
+        say("missiles")
+    end
+end)
+
+local lvl25 = macro(500, "Lvl25 SupMiss", function()
+    if g_game.isAttacking() then
+        say("super missiles")
+    end
+end)
+
+local lvl100 = macro(1000, "Lvl100 Expl", function()
+    if g_game.isAttacking() then
+        say("explosion")
+    end
+end)
+
+		local lvl15k = macro(1000, "Lvl1k5 AltExpl", function()
+    if g_game.isAttacking() then
+        say("alternative explosion")
+    end
+end)
+
+local lvl3k = macro(3000, "Lvl3k AltKame", function()
+    if g_game.isAttacking() then
+        say("alternative kamehameha")
+    end
+end)
+
+table.insert(listaMacros, lvl1)
+table.insert(listaMacros, lvl25)
+table.insert(listaMacros, lvl100)
+table.insert(listaMacros, lvl15k)
+table.insert(listaMacros, lvl3k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "Para Todos", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
+
+-- size es ancho alto
+setDefaultTab("NEW")
+
+
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Barba
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("barba branca blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("barba branca Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("barba branca Final Impact")
+    end
+end)
+
+local lvl5k = macro(3100, "Lvl5k Tremor", function()
+    if g_game.isAttacking() then
+        say("tremor")
+    end
+end)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "Barba", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Androide
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("android 16 blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("android 16 Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("android 16 Final Impact")
+    end
+end)
+
+local lvl5k = macro(3100, "Lvl5k Reta", function()
+    if g_game.isAttacking() then
+        say("Retaliate protocol")
+    end
+end)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "C 16", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Kuzan
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("kuzan aokiji Final Impact")
+    end
+end)
+
+local lvl5k = macro(3100, "Lvl5k Ice", function()
+    if g_game.isAttacking() then
+        say("ice collapse")
+    end
+end)
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "Kuzan", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
+
+g_ui.loadUIFromString([[
+ConfigWindow < MainWindow
+  text: Merlin
+  size: 160 160
+
+  HorizontalSeparator
+    id: separator
+    anchors.right: parent.right
+    anchors.left: parent.left
+    anchors.bottom: closeButton.top
+    margin-bottom: 6
+
+  Panel
+    id: lista
+    anchors.fill: parent
+    anchors.bottom: closeButton.top
+    layout:
+      type: grid
+      cell-size: 110 15
+      cell-spacing: 2
+
+  Button
+    id: closeButton
+    text: Cerrar
+    font: cipsoftFont
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    size: 45 21
+]])
+
+local panelName = "configMacro"
+if not storage[panelName] then
+  storage[panelName] = {
+    enabled = false,
+  }
+end
+
+local config = storage[panelName]
+
+local rootWidget = g_ui.getRootWidget()
+local configWindow
+
+configWindow = UI.createWindow('ConfigWindow', rootWidget)
+configWindow:hide()
+
+local listaMacros = {}
+
+local lvl4 = macro(400, "Lvl400 Blast", function()
+    if g_game.isAttacking() then
+        say("Merlin blast")
+    end
+end)
+
+local lvl8 = macro(800, "Lvl800 Impact", function()
+    if g_game.isAttacking() then
+        say("Merlin Impact")
+    end
+end)
+
+local lvl1k = macro(1000, "Lvl1k2 Final", function()
+    if g_game.isAttacking() then
+        say("Merlin Final Impact")
+    end
+end)
+
+table.insert(listaMacros, lvl4)
+table.insert(listaMacros, lvl8)
+table.insert(listaMacros, lvl1k)
+
+local checkboxes = {}
+
+for _, mac in ipairs(listaMacros) do
+    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
+    checkbox:setText(mac.switch:getText())
+    checkbox.onCheckChange = function(wid, isChecked)
+        mac.setOn(isChecked and config.enabled)
+    end
+    checkbox:setChecked(mac.isOn())
+    mac.switch:setVisible(false)
+    table.insert(checkboxes, checkbox)
+end
+
+configWindow.closeButton.onClick = function(widget)
+    configWindow:hide()
+end
+
+UI.SwitchAndButton({on = config.enabled, left = "Merlin", right = "MENU"}, function(widget)
+    config.enabled = not config.enabled
+    for i, mac in ipairs(listaMacros) do
+        mac.setOn(config.enabled and checkboxes[i]:isChecked())
+    end
+end, function()
+    configWindow:show()
+    configWindow:raise()
+    configWindow:focus()
+end)
