@@ -766,5 +766,5 @@ Panel
     delay((storage[panelName].time * 60000) - 1000)
   end)
 end
-comboScript(mainTab)
-addSeparator("sep", mainTab)
+comboScript(toolsTab)
+addSeparator("sep", toolsTab)
