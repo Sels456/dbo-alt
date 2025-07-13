@@ -718,7 +718,7 @@ end)
 
 local lvl5k = macro(3100, "Lvl5k Ice", function()
     if g_game.isAttacking() then
-        say("Phantom pull")
+        say("phantom pull")
     end
 end)
 
