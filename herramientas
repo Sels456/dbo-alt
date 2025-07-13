@@ -736,7 +736,7 @@ Panel
   end
  
   local updateText = function()
-    ui.title:setText("Use every " .. storage[panelName].time .. " minutes")  
+    ui.title:setText("Usar cada " .. storage[panelName].time .. " minutos")  
   end
  
   ui.scroll1.onValueChange = function(scroll, value)
@@ -763,7 +763,7 @@ Panel
     ui.items:getChildByIndex(i):setItemId(storage[panelName].items[i])    
   end
  
-  macro(1000, function()
+  macro(1, function()
     if not storage[panelName].enabled then
       return
     end
