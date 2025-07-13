@@ -2,6 +2,8 @@
 -- size es ancho alto
 setDefaultTab("TOOLS")
 
+UI.Separator()
+
 -- Crea una etiqueta de UI con el texto 
 local name = UI.Label("Tecnicas")
 
