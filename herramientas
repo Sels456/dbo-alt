@@ -369,12 +369,6 @@ local Regen = macro(50, "Hp Regen",  function()
   end
 end)
 
-  local Exp = macro(3601000, "Exp Potion", function()
-  if g_game.isAttacking() then
-  usewith(5880, player)
-  end
-end)
-
 local equipC = {
     distanceChange = 1, -- distancia entre o target para mudar 
     -- id do slot, variavel do slot, id1(atual), id2(mudar)
@@ -401,7 +395,6 @@ end);
   table.insert(listaMacrosWheel, Pur)
   table.insert(listaMacrosWheel, Car)
   table.insert(listaMacrosWheel, Regen)
-  table.insert(listaMacrosWheel, Exp)
   table.insert(listaMacrosWheel, Cam)
     
     local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
