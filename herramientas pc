@@ -1,36 +1,137 @@
-setDefaultTab("Main")
+local qw = modules.game_bot.contentsPanel.config
+macro(500, function()
+qw:setText("Super Bot")
+qw:setColor("pink")
+qw:setFont("verdana-11px-rounded")
+schedule(600, function()
+  qw:setColor("red")
+end)
+schedule(800, function()
+  qw:setColor("yellow")
+end)
+schedule(1200, function()
+  qw:setColor("orange")
+end)
+schedule(1400, function()
+  qw:setColor("#00FFFF")
+end)
+end)
 
+
+-- Establece la pestaÃ±a por defecto en "NEW"
+setDefaultTab("TOOLS")
+
+
+local label = UI.Label("Super Macro")
+label:setColor("#cc1d10") -- Color base
+label:setFont("verdana-11px-rounded")
+
+local glowPosition = 1
+local glowDirection = 1
+
+macro(50, function()
+    local text = "Super Macro"
+    local numChars = #text
+    local glowRange = math.max(1, math.floor(numChars / 10)) 
+    local coloredText = {}
+
+    for i = 1, numChars do
+        local char = text:sub(i, i)
+        local color = "#ba0000" -- Color base
+        if math.abs(i - glowPosition) <= glowRange then
+            color = "#e9baba" -- Color de brillo
+        end
+        table.insert(coloredText, char)
+        table.insert(coloredText, color)
+    end
+
+    glowPosition = glowPosition + glowDirection
+    if glowPosition > numChars then
+        glowPosition = numChars - 1
+        glowDirection = -1
+    elseif glowPosition < 1 then
+        glowPosition = 2
+        glowDirection = 1
+    end
+
+    label:setColoredText(coloredText)
+end)
+UI.Separator()
+
+--detector bless
+blessCheckBox = setupUI([[
+CheckBox
+  id: blessCheck
+  font: cipsoftFont
+  text: Auto Bless
+  !tooltip: tr('Verificar Bless ao Relogar')
+]])
+
+
+if storage.blessCheck == nil then
+    storage.blessCheck = true
+end
+blessCheckBox:setChecked(storage.blessCheck)
+
+
+blessCheckBox.onCheckChange = function(widget, checked)
+    storage.blessCheck = checked
+end
+
+
+if storage.blessCheck and player:getBlessings() == 0 then
+    say("!bless")
+    schedule(2000, function()
+        if player:getBlessings() == 0 then
+            error("Bless Verificada!")
+        end
+    end)
+end
+
+
+--macro completa
 g_ui.loadUIFromString([[
-ConfigWindow < MainWindow
-  text: HERRAMIEMTAS
-  size: 100 270
+menPanel < Panel
+  margin: 2
+  margin-bottom: 17
+  layout:
+    type: verticalBox
 
-  HorizontalSeparator
-    id: separator
-    anchors.right: parent.right
+ConfigWindowKnight < MainWindow
+  !text: tr('- OPCIONES -')
+  font: terminus-10px
+  color: yellow
+  size: 210 200
+  @onEscape: self:hide()
+
+  TabBar
+    id: spellsTabBar
+    anchors.top: parent.top
     anchors.left: parent.left
-    anchors.bottom: closeButton.top
-    margin-bottom: 6
+    anchors.right: parent.right
+    margin-top: 2
 
   Panel
-    id: lista
-    anchors.fill: parent
-    anchors.bottom: closeButton.top
-    layout:
-      type: grid
-      cell-size: 110 15
-      cell-spacing: 2
+    id: spellsImagem
+    anchors.top: spellsTabBar.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    image-border: 2
 
   Button
     id: closeButton
-    text: Cerrar
+    !text: tr('Cerrar')
     font: cipsoftFont
     anchors.right: parent.right
     anchors.bottom: parent.bottom
-    size: 45 21
+    size: 49 21
+    margin-top: 1
+    margin-right: -5
+    margin-bottom: -5
 ]])
 
-local panelName = "configMacro"
+local panelName = "configKnight"
 if not storage[panelName] then
   storage[panelName] = {
     enabled = false,
@@ -39,46 +140,51 @@ end
 
 local config = storage[panelName]
 
-local rootWidget = g_ui.getRootWidget()
-local configWindow
+rootWidget = g_ui.getRootWidget()
+if rootWidget then
+  configWindowKnight = UI.createWindow('ConfigWindowKnight', rootWidget)
+  configWindowKnight:hide()
+  local TabBarSpells = configWindowKnight.spellsTabBar
+  TabBarSpells:setContentWidget(configWindowKnight.spellsImagem)
 
-configWindow = UI.createWindow('ConfigWindow', rootWidget)
-configWindow:hide()
+  -- Panel para macros Normales
+  local normalPanel = g_ui.createWidget("menPanel")
+  normalPanel:setId("panelNormal")
+  TabBarSpells:addTab("OPTION", normalPanel)
 
-local listaMacros = {}
+  -- Panel para macros No PK
+  local noPkPanel = g_ui.createWidget("menPanel")
+  noPkPanel:setId("panelNoPK")
+  TabBarSpells:addTab("PVP", noPkPanel)
 
-local bless = false
-local Pot = macro(1000, "PotBless", function()
-    if bless ~= true then
-        bless = true
-      usewith(13052, player)
-    end
-end)
+  -- Panel para macros Wheel
+  local wheelPanel = g_ui.createWidget("menPanel")
+  wheelPanel:setId("panelWheel")
+  TabBarSpells:addTab("HP", wheelPanel)
 
-local bless = false
-local Bless = macro(1000, "!Bless", function()
-    if bless ~= true then
-        bless = true
-      say("!bless")
-    end
-end)
+  -- Panel para macros Más
+  local masPanel = g_ui.createWidget("menPanel")
+  masPanel:setId("panelMas")
+  TabBarSpells:addTab(" + ", masPanel)
 
-local Bol = macro(1000, "!Bol", function()
+  UI.Separator(normalPanel)
+  UI.Separator(noPkPanel)
+  UI.Separator(wheelPanel)
+  UI.Separator(masPanel)
+
+  local listaMacrosNormal = {}
+  local listaMacrosNoPK = {}
+  local listaMacrosWheel = {}
+  local listaMacrosMas = {}
+
+  -- Macros para hechizos del Knight
+  local Bol = macro(1000, "!Bol", function()
   if not getFinger() then
       say('!bol')
   end
 end)
-
-local Ene = macro(1, "Enemy", function()
-for _,pla in ipairs(getSpectators(posz())) do
-attacked = g_game.getAttackingCreature()
-  if (not attacked or (attacked and (not attacked:isPlayer() or (pla:getHealthPercent() < attacked:getHealthPercent())))) and pla:isPlayer() and pla:getEmblem() ~= 1 then 
-   g_game.attack(pla)
-  end
-end
-end) 
-
-local Hol = macro(100, "Hold", nil, function()
+  
+  local Hol = macro(100, "Hold Target", nil, function()
   if g_game.isAttacking() 
 then
  oldTarget = g_game.getAttackingCreature()
@@ -94,7 +200,7 @@ if (oldTarget:getPosition().z == posz()) then
   end
 end)
 
-local Atk = macro(1, "Attack", "", function() 
+local Atk = macro(1, "Attack All", "", function() 
   local battlelist = getSpectators();
   local closest = 10
   local lowesthpc = 101
@@ -122,13 +228,183 @@ local Atk = macro(1, "Attack", "", function()
 end)
 
 local Pow = macro(100, "Treinar", function()
-if (manapercent() >= 99) then 
-say('ManaDown')
+if (manapercent() >= 20) then 
+say('manadown')
 end
 end)
 
 
-local TH = macro(100, "Msg", function() end)
+local Bug = macro(1, 'Bug Map', '', function() 
+ if modules.corelib.g_keyboard.isKeyPressed('w') then
+  checkPos(0, -5)
+ elseif modules.corelib.g_keyboard.isKeyPressed('e') then
+  checkPos(3, -3)
+ elseif modules.corelib.g_keyboard.isKeyPressed('d') then
+  checkPos(5, 0)
+ elseif modules.corelib.g_keyboard.isKeyPressed('c') then
+  checkPos(3, 3)
+ elseif modules.corelib.g_keyboard.isKeyPressed('s') then
+  checkPos(0, 5)
+ elseif modules.corelib.g_keyboard.isKeyPressed('z') then
+  checkPos(-3, 3)
+ elseif modules.corelib.g_keyboard.isKeyPressed('a') then
+  checkPos(-5, 0)
+ elseif modules.corelib.g_keyboard.isKeyPressed('q') then
+  checkPos(-3, -3)
+ end
+end)
+    
+local Spe = macro(60100, "Speed", function()
+  say('super speed')
+end)
+    
+  -- Agregando los macros a la lista
+  table.insert(listaMacrosNormal, Bol)
+  table.insert(listaMacrosNormal, Hol)
+  table.insert(listaMacrosNormal, Atk)
+  table.insert(listaMacrosNormal, Pow)
+  table.insert(listaMacrosNormal, Bug)
+  table.insert(listaMacrosNormal, Spe)
+
+-- Macros para hechizos del Knight (No-PK)
+local Ene = macro(1, "Enemy", function()
+for _,pla in ipairs(getSpectators(posz())) do
+attacked = g_game.getAttackingCreature()
+  if (not attacked or (attacked and (not attacked:isPlayer() or (pla:getHealthPercent() < attacked:getHealthPercent())))) and pla:isPlayer() and pla:getEmblem() ~= 1 then 
+   g_game.attack(pla)
+  end
+end
+end) 
+
+local Def = macro(4000, "Alter Def", function()
+    if g_game.isAttacking() then
+        say("Alternative defense")
+    end
+end)
+
+local Canc = macro(5000, "Alter Cancel", function()
+    if g_game.isAttacking() then
+        say("Alternative defense cancel")
+    end
+end)
+    
+    local castBelowHp = 90
+local deactiveBelowMana = 80
+local shie = macro(100, "ManaShield",  function()
+  if (hppercent() <= castBelowHp and manapercent() >= deactiveBelowMana and not hasManaShield()) then
+    say('Alternative defense')
+  end
+  if (manapercent() <= deactiveBelowMana and  hppercent() >= castBelowHp and hasManaShield()) then
+      say('Alternative defense cancel')
+  end
+end)
+    
+local Sen = macro(1, 'Sense', function()
+  if storage.Sense then
+      locatePlayer = getPlayerByName(storage.Sense)
+      if not (locatePlayer and locatePlayer:getPosition().z == player:getPosition().z and getDistanceBetween(pos(), locatePlayer:getPosition()) <= 6) then
+          say('sense "' .. storage.Sense)
+          delay(500)
+      end
+  end
+end)
+
+onTalk(function(name, level, mode, text, channelId, pos)
+  if player:getName() == name then
+      if string.sub(text, 1, 1) == 'x' then
+          local checkMsg = string.sub(text, 2):trim()
+          if checkMsg == '0' then
+              storage.Sense = false
+          else
+              storage.Sense = checkMsg
+          end
+      end
+  end
+end)
+
+
+  -- Agregando los macros No-PK a la lista
+  table.insert(listaMacrosNoPK, Ene)
+  table.insert(listaMacrosNoPK, Def)
+  table.insert(listaMacrosNoPK, Canc)
+  table.insert(listaMacrosNoPK, shie)
+  table.insert(listaMacrosNoPK, Sen)
+    
+  local Pur = macro(1, 'Sensu Purple', function()
+  if hppercent() <= 90 or manapercent() <= 90 then
+   usewith(12644, player)
+   end
+end)
+  
+local Car = macro(5100, 'Carnes', function()
+  if hppercent() <= 90 or manapercent() <= 90 then
+   usewith(3577, player)
+   end
+end)
+
+  local healingSpell = 'Regeneration'
+local hpPercent = 90
+local Regen = macro(50, "Hp Regen",  function()
+  if (hppercent() <= hpPercent) then
+    say('regeneration') 
+  end
+end)
+
+  local Exp = macro(3601000, "Exp Potion", function()
+  if g_game.isAttacking() then
+  usewith(5880, player)
+  end
+end)
+
+local equipC = {
+    distanceChange = 1, -- distancia entre o target para mudar 
+    -- id do slot, variavel do slot, id1(atual), id2(mudar)
+    {varFunc = getNeck, slot = SlotNeck, id1 = 12506},
+    {varFunc = getFinger, slot = SlotFinger, id1 = 12507}
+};
+
+local Cam = macro(100, "Auto RingAmulet", function()
+    local target = g_game.getAttackingCreature();
+    local playerPos = pos();
+    if not g_game.isAttacking() then return; end
+    local targetPos = target:getPosition();
+    local targetDistance = getDistanceBetween(playerPos, targetPos);
+    for _, equip in ipairs(equipC) do
+        local currentItem = equip.varFunc();
+        if targetDistance <= equipC.distanceChange then
+            if not currentItem or currentItem:getId() ~= equip.id1 then
+                moveToSlot(equip.id1, equip.slot)
+            end
+        end
+    end
+end);
+
+  table.insert(listaMacrosWheel, Pur)
+  table.insert(listaMacrosWheel, Car)
+  table.insert(listaMacrosWheel, Regen)
+  table.insert(listaMacrosWheel, Exp)
+  table.insert(listaMacrosWheel, Cam)
+    
+    local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
+local Gold = macro(1000, "Exchange Money", function()
+  local containers = g_game.getContainers()
+  for index, container in pairs(containers) do
+    if not container.lootContainer then
+      for i, item in ipairs(container:getItems()) do
+        if item:getCount() == 100 then
+          for m, mId in ipairs(mIds) do
+            if item:getId() == mId then
+              return g_game.use(item)          
+            end
+          end
+        end
+      end
+    end
+  end
+end)
+    
+-- Esconder mensaje naranja 
+local TH = macro(100, "No Msg Nrj", function() end)
 onStaticText(function(thing, text)
     if TH.isOff() then return end
     if not text:find('says:') then
@@ -137,56 +413,142 @@ onStaticText(function(thing, text)
 end)
 
 --[[Esconder MAGIAS(SPRITES)]]--
-local sprh = macro(100, "Sprite", function() end)
+local sprh = macro(100, "Sin Sprites", function() end)
 onAddThing(function(tile, thing)
     if sprh.isOff() then return end
     if thing:isEffect() then
         thing:hide()
     end
 end)
+    
+    --Recoger items del suelo
+ function getNearTiles(pos)
+  if type(pos) ~= "table" then
+    pos = pos:getPosition() 
+  end
 
-local Spe = macro(30100, "speed", function()
-  say('super speed')
-end)
+  local tiles = {}
+  local dirs = {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}
 
-table.insert(listaMacros, Pot)
-table.insert(listaMacros, Bless)
-table.insert(listaMacros, Bol)
-table.insert(listaMacros, Ene)
-table.insert(listaMacros, Hol)
-table.insert(listaMacros, Atk)
-table.insert(listaMacros, Pow)
-table.insert(listaMacros, TH)
-table.insert(listaMacros, sprh)
-table.insert(listaMacros, Spe)
-
-local checkboxes = {}
-
-for _, mac in ipairs(listaMacros) do
-    local checkbox = g_ui.createWidget("CheckBox", configWindow.lista)
-    checkbox:setText(mac.switch:getText())
-    checkbox.onCheckChange = function(wid, isChecked)
-        mac.setOn(isChecked and config.enabled)
+  for i = 1, #dirs do
+    local tile = g_map.getTile({ x = pos.x - dirs[i][1], y = pos.y - dirs[i][2], z = pos.z })
+    if tile then 
+      table.insert(tiles, tile) 
     end
-    checkbox:setChecked(mac.isOn())
-    mac.switch:setVisible(false)
-    table.insert(checkboxes, checkbox)
+  end
+  return tiles
 end
 
-configWindow.closeButton.onClick = function(widget)
-    configWindow:hide()
+function autoLootItemsFromTiles(tiles)
+  for _, tile in ipairs(tiles) do
+    for _, item in ipairs(tile:getItems()) do
+      if item:isPickupable() then
+        if g_game.move(item, {x=65535, y=SlotBack, z=0}, item:getCount()) then
+          delay(100)
+        end
+      end
+    end
+  end
 end
 
-UI.SwitchAndButton({on = config.enabled, left = "HERRAMIENTAS", right = "MENU"}, function(widget)
-    config.enabled = not config.enabled
-    for i, mac in ipairs(listaMacros) do
-        mac.setOn(config.enabled and checkboxes[i]:isChecked())
-    end
-end, function()
-    configWindow:show()
-    configWindow:raise()
-    configWindow:focus()
+local Items = macro(250, "Recoger del suelo", function()
+  local tiles = getNearTiles(pos())
+  autoLootItemsFromTiles(tiles)
 end)
+    
+local Cha = macro(60100, "Chakra", function()
+  say('chakra feet')
+end)
+    
+    local Luz = macro(10000, "Luz", function()
+  say('luz')
+end)
+
+    table.insert(listaMacrosMas, Gold)
+    table.insert(listaMacrosMas, TH)
+    table.insert(listaMacrosMas, sprh)
+    table.insert(listaMacrosMas, Items)
+    table.insert(listaMacrosMas, Cha)
+    table.insert(listaMacrosMas, Luz)
+  -- Creación de checkboxes para los paneles
+  local checkboxesNormal = {}
+  local checkboxesNoPK = {}
+  local checkboxesWheel = {}
+  local checkboxesMas = {}
+
+  -- Agregar checkboxes para el panel Normal
+  for _, mac in ipairs(listaMacrosNormal) do
+      local checkbox = g_ui.createWidget("CheckBox", normalPanel)
+      checkbox:setText(mac.switch:getText())
+      checkbox.onCheckChange = function(wid, isChecked)
+          mac.setOn(isChecked and config.enabled)
+      end
+      checkbox:setChecked(mac.isOn())
+      mac.switch:setVisible(false)
+      table.insert(checkboxesNormal, checkbox)
+  end
+
+  -- Agregar checkboxes para el panel No PK
+  for _, mac in ipairs(listaMacrosNoPK) do
+      local checkbox = g_ui.createWidget("CheckBox", noPkPanel)
+      checkbox:setText(mac.switch:getText())
+      checkbox.onCheckChange = function(wid, isChecked)
+          mac.setOn(isChecked and config.enabled)
+      end
+      checkbox:setChecked(mac.isOn())
+      mac.switch:setVisible(false)
+      table.insert(checkboxesNoPK, checkbox)
+  end
+
+  -- Agregar checkboxes para el panel Wheel
+  for _, mac in ipairs(listaMacrosWheel) do
+      local checkbox = g_ui.createWidget("CheckBox", wheelPanel)
+      checkbox:setText(mac.switch:getText())
+      checkbox.onCheckChange = function(wid, isChecked)
+          mac.setOn(isChecked and config.enabled)
+      end
+      checkbox:setChecked(mac.isOn())
+      mac.switch:setVisible(false)
+      table.insert(checkboxesWheel, checkbox)
+  end
+
+  -- Agregar checkboxes para el panel Más
+  for _, mac in ipairs(listaMacrosMas) do
+      local checkbox = g_ui.createWidget("CheckBox", masPanel)
+      checkbox:setText(mac.switch:getText())
+      checkbox.onCheckChange = function(wid, isChecked)
+          mac.setOn(isChecked and config.enabled)
+      end
+      checkbox:setChecked(mac.isOn())
+      mac.switch:setVisible(false)
+      table.insert(checkboxesMas, checkbox)
+  end
+
+  configWindowKnight.closeButton.onClick = function(widget)
+      configWindowKnight:hide()
+  end
+
+  -- Switch para habilitar/deshabilitar los macros
+  UI.SwitchAndButton({on = config.enabled, left = "OPCIONES", right = "Menu"}, function(widget)
+      config.enabled = not config.enabled
+      for i, mac in ipairs(listaMacrosNormal) do
+          mac.setOn(config.enabled and checkboxesNormal[i]:isChecked())
+      end
+      for i, mac in ipairs(listaMacrosNoPK) do
+          mac.setOn(config.enabled and checkboxesNoPK[i]:isChecked())
+      end
+      for i, mac in ipairs(listaMacrosWheel) do
+          mac.setOn(config.enabled and checkboxesWheel[i]:isChecked())
+      end
+      for i, mac in ipairs(listaMacrosMas) do
+          mac.setOn(config.enabled and checkboxesMas[i]:isChecked())
+      end
+  end, function()
+      configWindowKnight:show()
+      configWindowKnight:raise()
+      configWindowKnight:focus()
+  end)
+end
 
 local ui = setupUI([[
 Panel
@@ -221,9 +583,63 @@ local cores = {
 
 macro(150, function()
   local cor1, cor2, cor3, cor4 = cores[math.random(#cores)], cores[math.random(#cores)], cores[math.random(#cores)], cores[math.random(#cores)]
-  ui.label1:setColoredText({"BOT ", cor1, "EXCLUSIVE ", cor2, "NDBO-WAR ", cor3, "BY:XxLuCaSxX", cor4})
+  ui.label1:setColoredText({"CUSTOM ", cor1, "BOT ", cor2, "MV-ALT ", cor3, "BY:XxLuCaSxX", cor4})
 end)
 
 -- Mueve el panel de UI a la posición deseada
 ui:breakAnchors() -- Rompe las restricciones de posición actuales del panel
-ui:move(260 ,10) -- Mueve el panel a la posición
+ui:move(260 ,30) -- Mueve el panel a la posición
+
+nextBackpack = macro(100,"Abrir Mochila",function()
+    local containerId = 2872
+    for i, container in pairs(getContainers()) do
+        containerItem = container:getContainerItem()
+        if containerItem and containerItem:getId() == containerId then
+            if container:getItemsCount() == 1 then
+                item = container:getItem(0)
+                if item and item:isContainer() then
+                    g_game.open(item, container)
+                    delay(200)
+                end
+            end
+        end
+    end
+end)
+-- Función para crear el ícono con funcionalidad de switchable
+function createCityIcon(cityName, xPosition, yPosition)
+  local icon = addIcon(cityName .. "San", {item=3034, text=cityName, movable=true, switchable=false}, function()
+    NPC.say("hi")
+    schedule(600, function() NPC.say(cityName) end)
+  end)
+
+  icon:breakAnchors()  -- Rompe las restricciones de posición
+  icon:move(xPosition, yPosition)  -- Mueve el ícono a la posición dada
+end
+
+-- Llamadas para crear los íconos para cada ciudad
+
+createCityIcon("vender common",  50, 60)
+createCityIcon("vender uncommon", 50, 120)
+createCityIcon("vender rare", 50, 180)
+createCityIcon("vender epic", 50, 240)
+createCityIcon("vender lendario", 50, 300)
+createCityIcon("trade",  110, 60)
+
+-- Crea una etiqueta de UI con el texto 
+local name = UI.Label("XxLuCaSxX")
+
+-- Define una macro que se ejecuta cada 800 milisegundos
+macro(800, function()
+  local rainbowDelay = 0 -- Inicializa el retraso del arco iris
+
+  -- Itera sobre una lista de colores
+  for k, color in ipairs({"#d90202", "#d9ca02", "#02d906", "#0283d9", "#7c02d9", "#02d9d9"}) do
+    -- Programa una funciÃ³n que cambia el color de la etiqueta despuÃ©s de un retraso
+    schedule(rainbowDelay, function()
+      name:setColor(color) -- Establece el color de la etiqueta
+    end)
+
+    -- Incrementa el retraso para el prÃ³ximo color
+    rainbowDelay = rainbowDelay + 100 -- Tiempo entre colores
+  end
+end, SpellsTab)
