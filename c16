@@ -518,9 +518,16 @@ local lvl1k = macro(1000, "Lvl1k2 Final", function()
     end
 end)
 
+local lvl5k = macro(3100, "Lvl5k Cube", function()
+    if g_game.isAttacking() then
+        say("perfect cube")
+    end
+end)
+
 table.insert(listaMacros, lvl4)
 table.insert(listaMacros, lvl8)
 table.insert(listaMacros, lvl1k)
+table.insert(listaMacros, lvl5k)
 
 local checkboxes = {}
 
@@ -716,7 +723,7 @@ local lvl1k = macro(1000, "Lvl1k2 Final", function()
     end
 end)
 
-local lvl5k = macro(3100, "Lvl5k Ice", function()
+local lvl5k = macro(3100, "Lvl5k Pull", function()
     if g_game.isAttacking() then
         say("phatom pull")
     end
@@ -821,7 +828,7 @@ local lvl1k = macro(1000, "Lvl1k2 Final", function()
     end
 end)
 
-local lvl5k = macro(3100, "Lvl5k Ice", function()
+local lvl5k = macro(3100, "Lvl5k Elt", function()
     if g_game.isAttacking() then
         say("deslize eletrico")
     end
