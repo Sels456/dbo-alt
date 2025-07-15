@@ -518,7 +518,7 @@ local lvl1k = macro(1000, "Lvl1k2 Final", function()
     end
 end)
 
-local lvl5k = macro(50000, "Lvl5k Cube", function()
+local lvl5k = macro(61000, "Lvl5k Cube", function()
     if g_game.isAttacking() then
         say("perfect cube")
     end
