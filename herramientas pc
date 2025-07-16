@@ -353,6 +353,11 @@ local Regen = macro(50, "Hp Regen",  function()
   end
 end)
 
+local Exp = macro(610000, "Exp Potion", function()
+    if g_game.isAttacking() then
+        usewith(5880, player)
+    end
+end)
 
 --ring and amulet
 local equipC = {
