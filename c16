@@ -725,7 +725,7 @@ end)
 
 local lvl5k = macro(3100, "Lvl5k Pull", function()
     if g_game.isAttacking() then
-        say("phatom pull")
+        say("phantom pull")
     end
 end)
 table.insert(listaMacros, lvl4)
