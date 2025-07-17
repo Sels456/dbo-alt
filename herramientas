@@ -403,7 +403,7 @@ end);
   table.insert(listaMacrosWheel, Pur)
   table.insert(listaMacrosWheel, Car)
   table.insert(listaMacrosWheel, Regen)
-  table.insert(listaMacrosWheel, exp)
+  table.insert(listaMacrosWheel, Exp)
   table.insert(listaMacrosWheel, Cam)
     
     local mIds = {3031, 3035, 3043} -- PUT CRYSTAL COIN/GOLD NUGGET IDS HERE
